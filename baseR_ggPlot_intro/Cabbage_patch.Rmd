@@ -1,0 +1,94 @@
+---
+title: "Cabbage Patch"
+author: "You"
+date: "2/11/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+Sample.Data.Cabbages <- read.csv("./Sample-Data-Cabbages.csv")
+#install.packages(c("kableExtra", "ggpubr"))
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(ggpubr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cabbage_table, echo=FALSE}
+kable(Sample.Data.Cabbages) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive", full_width = F))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r gettoknowyodata, echo=FALSE}
+#look at each intersection of data
+plot(Sample.Data.Cabbages)
+
+#how many unique weights?
+length(unique(Sample.Data.Cabbages$Head.Weight))
+
+#how many samples are of the January King variety?
+nrow(subset(Sample.Data.Cabbages, Sample.Data.Cabbages$Cultivar=="January King"))
+
+#using the same formula how many unique "days to harvest" are there?
+
+
+#what is the mean weight?
+mean(Sample.Data.Cabbages$Head.Weight)
+
+#what is the mean days to harvest for each variety?
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+
+plot(Sample.Data.Cabbages$Head.Weight, Sample.Data.Cabbages$Ascorbic.Acid, col = Sample.Data.Cabbages$Cultivar, pch = 16, cex = 2, main="Weights by Ascorbic Acid", xlab="Head Weight (Kg)", ylab="Ascorbic Acid (µg/g cabbage)")
+#fix the legend position
+legend(4, 70, 
+       #check to make sure the dots are represented correctly
+       legend = c("January King","Cannonball"),
+       col = c(1:2),
+       lty = "solid")
+
+#hint
+levels(Sample.Data.Cabbages$Cultivar)
+```
+
+
+```{r}
+#Make the same figure but with ggplot
+#ggplot(fill this in) + geom_point()+ xlab("Head Weight") + ylab("Ascorbic Acid µg/g Cabbage")+ guides(color=guide_legend(title="Cultivar"))
+```
+
+```{r echo=FALSE}
+#add color and overlay data points
+
+ggplot(Sample.Data.Cabbages, aes(Sample.Data.Cabbages$Cultivar, Sample.Data.Cabbages$Head.Weight)) + geom_boxplot() + stat_compare_means(method = "t.test")
+
+CB_weight<-(subset(Sample.Data.Cabbages$Head.Weight, Sample.Data.Cabbages$Cultivar=="Cannonball"))
+JK_weight<-(subset(Sample.Data.Cabbages$Head.Weight, Sample.Data.Cabbages$Cultivar=="January King"))
+pval<-t.test(CB_weight,JK_weight)
+
+boxplot(Sample.Data.Cabbages$Head.Weight~Sample.Data.Cabbages$Cultivar, data=Sample.Data.Cabbages, main="Cultivar Weights", xlab="Cultivars", ylab="Head Weight (Kg)")
+text(1,1, pval$p.value)
+
+
+```
+
+```{r daytoharvest, echo=FALSE}
+
+#Create a figure that would show the difference between time to harvest for each cultivar. 
+
+```
